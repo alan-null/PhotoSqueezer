@@ -4,9 +4,9 @@ namespace PhotoSqueezer
 {
     public class Options
     {
-        public ParallelOptions ParallelOptions { get; set; } = new ParallelOptions { MaxDegreeOfParallelism = 5 };
-        public int Width { get; set; } = 2000;
-        public int Height { get; set; } = 2000;
-        public long Compression { get; set; } = 60L;
+        public ParallelOptions ParallelOptions { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public long Compression { get; set; }
     }
 }

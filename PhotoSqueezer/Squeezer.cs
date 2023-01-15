@@ -23,6 +23,15 @@ namespace PhotoSqueezer
 
         public void Sqeeze(string src, string dst)
         {
+            System.Console.WriteLine("Squeezing");
+            System.Console.WriteLine($"From: {src}");
+            System.Console.WriteLine($"To: {dst}");
+            System.Console.WriteLine(string.Empty);
+            System.Console.WriteLine($"Parameters");
+            System.Console.WriteLine($"Width: {Options.Width}");
+            System.Console.WriteLine($"Height: {Options.Height}");
+            System.Console.WriteLine($"Compression: {Options.Compression}");
+
             CreateFolderStructure(src, dst);
 
             var missing = GetMissingFiles(src, dst).Select(path => new FileInfo(path));

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using CommandLine;
+using System.Threading.Tasks;
 
 namespace PhotoSqueezer
 {
@@ -6,23 +7,18 @@ namespace PhotoSqueezer
     {
         static void Main(string[] args)
         {
-            string src = @"C:\dir-in";
-            string dst = @"C:\dir-out";
+            Parser.Default.ParseArguments<InputOptions>(args).WithParsed(o => new Squeezer(Parse(o)).Sqeeze(o.Source, o.Destination));
+        }
 
-            if (!Directory.Exists(src))
+        private static Options Parse(InputOptions o)
+        {
+            return new Options
             {
-                System.Console.WriteLine("Incorrect source directory");
-                return;
-
-            }
-            if (!Directory.Exists(dst))
-            {
-                System.Console.WriteLine("Incorrect destination directory");
-                return;
-            }
-
-            var s = new Squeezer();
-            s.Sqeeze(src, dst);
+                Width = o.Width,
+                Height = o.Height,
+                Compression = o.Compression,
+                ParallelOptions = new ParallelOptions { MaxDegreeOfParallelism = o.Threads }
+            };
         }
     }
 }
