@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Options.cs" />
     <Compile Include="Squeezer.cs" />
     <Compile Include="MediaProcessor.cs" />
     <Compile Include="Program.cs" />

@@ -10,11 +10,15 @@ namespace PhotoSqueezer
 {
     public class Squeezer
     {
-        public static MediaProcessor mediaProcessor { get; private set; }
+        protected MediaProcessor mediaProcessor { get; private set; }
+        protected Options Options { get; }
 
-        public Squeezer()
+        public Squeezer() : this(new Options()) { }
+
+        public Squeezer(Options o)
         {
             mediaProcessor = new MediaProcessor();
+            Options = o;
         }
 
         public void Sqeeze(string src, string dst)
@@ -23,8 +27,7 @@ namespace PhotoSqueezer
 
             var missing = GetMissingFiles(src, dst).Select(path => new FileInfo(path));
 
-            var options = new ParallelOptions { MaxDegreeOfParallelism = 5 };
-            Parallel.ForEach(missing, options, fi => { TransformFile(fi, fi.FullName.Replace(src, dst)); });
+            Parallel.ForEach(missing, Options.ParallelOptions, fi => { TransformFile(fi, fi.FullName.Replace(src, dst)); });
         }
 
         protected virtual void CreateFolderStructure(string startPath, string destination)
@@ -79,8 +82,8 @@ namespace PhotoSqueezer
         {
             using (var file = GetFile(source))
             {
-                var resized = mediaProcessor.Resize(file, 2000, 2000);
-                using (var compressed = mediaProcessor.Compress(resized, 60))
+                var resized = mediaProcessor.Resize(file, Options.Width, Options.Height);
+                using (var compressed = mediaProcessor.Compress(resized, Options.Compression))
                 {
                     Image image = CopyMeta(file, compressed);
                     using (var result = File.Create(path))
