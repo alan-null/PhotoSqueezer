@@ -25,16 +25,19 @@ namespace PhotoSqueezer
             return result;
         }
 
-        public virtual Bitmap Resize(Stream img, int width, int height)
+        public virtual Bitmap Resize(Stream img, int width, int height, bool proportionalResize = false, double ratio = -1)
         {
             var image = Image.FromStream(img);
 
-            var ratioX = 1.0 * width / image.Width;
-            var ratioY = 1.0 * height / image.Height;
-            var ratio = Math.Min(ratioX, ratioY);
+            if (proportionalResize)
+            {
+                var ratioX = 1.0 * width / image.Width;
+                var ratioY = 1.0 * height / image.Height;
+                ratio = Math.Min(ratioX, ratioY);
+            }
 
-            var newWidth = (int)(image.Width * ratio);
-            var newHeight = (int)(image.Height * ratio);
+            var newWidth = proportionalResize || ratio > 0 ? (int)(image.Width * ratio) : width;
+            var newHeight = proportionalResize || ratio > 0 ? (int)(image.Height * ratio) : height;
 
             var bitmap = new Bitmap(newWidth, newHeight);
             var graphics = Graphics.FromImage(bitmap);

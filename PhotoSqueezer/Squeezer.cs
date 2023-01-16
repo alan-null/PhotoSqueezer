@@ -67,9 +67,9 @@ namespace PhotoSqueezer
         {
             if (obj.Extension.Equals(".heic"))
             {
+                var jpgStream = new MemoryStream();
                 using (var file = File.OpenRead(obj.FullName))
                 {
-                    var jpgStream = new MemoryStream();
                     using (var memoryStream = new MemoryStream())
                     {
                         file.CopyTo(memoryStream);
@@ -78,8 +78,8 @@ namespace PhotoSqueezer
                             image.Write(jpgStream, MagickFormat.Jpg);
                         }
                     }
-                    return jpgStream;
                 }
+                return jpgStream;
             }
             else
             {
@@ -91,7 +91,7 @@ namespace PhotoSqueezer
         {
             using (var file = GetFile(source))
             {
-                var resized = mediaProcessor.Resize(file, Options.Width, Options.Height);
+                var resized = mediaProcessor.Resize(file, Options.Width, Options.Height, Options.ProportionalResize, Options.Ratio);
                 using (var compressed = mediaProcessor.Compress(resized, Options.Compression))
                 {
                     Image image = CopyMeta(file, compressed);

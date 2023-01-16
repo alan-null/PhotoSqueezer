@@ -8,5 +8,7 @@ namespace PhotoSqueezer
         public int Width { get; set; }
         public int Height { get; set; }
         public long Compression { get; set; }
+        public double Ratio { get; set; }
+        public bool ProportionalResize { get; set; }
     }
 }
