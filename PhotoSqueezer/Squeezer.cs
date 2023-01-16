@@ -31,6 +31,7 @@ namespace PhotoSqueezer
             System.Console.WriteLine($"Width: {Options.Width}");
             System.Console.WriteLine($"Height: {Options.Height}");
             System.Console.WriteLine($"Compression: {Options.Compression}");
+            System.Console.WriteLine($"MaxDegreeOfParallelism: {Options.ParallelOptions.MaxDegreeOfParallelism}");
 
             CreateFolderStructure(src, dst);
 
@@ -91,13 +92,16 @@ namespace PhotoSqueezer
         {
             using (var file = GetFile(source))
             {
-                var resized = mediaProcessor.Resize(file, Options.Width, Options.Height, Options.ProportionalResize, Options.Ratio);
-                using (var compressed = mediaProcessor.Compress(resized, Options.Compression))
+                using (var resized = mediaProcessor.Resize(file, Options.Width, Options.Height, Options.ProportionalResize, Options.Ratio))
                 {
-                    Image image = CopyMeta(file, compressed);
-                    using (var result = File.Create(path))
+                    using (var compressed = mediaProcessor.Compress(resized, Options.Compression))
                     {
-                        image.Save(result, ImageFormat.Jpeg);
+                        Image image = CopyMeta(file, compressed);
+                        using (var result = File.Create(path))
+                        {
+                            image.Save(result, ImageFormat.Jpeg);
+                        }
+                        image.Dispose();
                     }
                 }
             }
@@ -106,18 +110,20 @@ namespace PhotoSqueezer
         protected virtual Image CopyMeta(Stream from, Stream to)
         {
             var src = Image.FromStream(from);
-            var dst = Image.FromStream(to);
-
-            foreach (var p in dst.PropertyIdList)
             {
-                dst.RemovePropertyItem(p);
-            }
+                var dst = Image.FromStream(to);
 
-            foreach (var p in src.PropertyItems)
-            {
-                dst.SetPropertyItem(p);
+                foreach (var p in dst.PropertyIdList)
+                {
+                    dst.RemovePropertyItem(p);
+                }
+
+                foreach (var p in src.PropertyItems)
+                {
+                    dst.SetPropertyItem(p);
+                }
+                return dst;
             }
-            return dst;
         }
     }
 }
