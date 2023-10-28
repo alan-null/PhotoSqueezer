@@ -1,4 +1,5 @@
 ﻿using ImageMagick;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -23,15 +24,15 @@ namespace PhotoSqueezer
 
         public void Sqeeze(string src, string dst)
         {
-            System.Console.WriteLine("Squeezing");
-            System.Console.WriteLine($"From: {src}");
-            System.Console.WriteLine($"To: {dst}");
-            System.Console.WriteLine(string.Empty);
-            System.Console.WriteLine($"Parameters");
-            System.Console.WriteLine($"Width: {Options.Width}");
-            System.Console.WriteLine($"Height: {Options.Height}");
-            System.Console.WriteLine($"Compression: {Options.Compression}");
-            System.Console.WriteLine($"MaxDegreeOfParallelism: {Options.ParallelOptions.MaxDegreeOfParallelism}");
+            Console.WriteLine("Squeezing");
+            Console.WriteLine($"From: {src}");
+            Console.WriteLine($"To: {dst}");
+            Console.WriteLine(string.Empty);
+            Console.WriteLine($"Parameters");
+            Console.WriteLine($"Width: {Options.Width}");
+            Console.WriteLine($"Height: {Options.Height}");
+            Console.WriteLine($"Compression: {Options.Compression}");
+            Console.WriteLine($"MaxDegreeOfParallelism: {Options.ParallelOptions.MaxDegreeOfParallelism}");
 
             CreateFolderStructure(src, dst);
 
@@ -50,7 +51,14 @@ namespace PhotoSqueezer
             {
                 if (!Directory.Exists(d))
                 {
-                    Directory.CreateDirectory(d);
+                    if (Options.Verify)
+                    {
+                        Console.WriteLine($"CreateDirectory({d})");
+                    }
+                    else
+                    {
+                        Directory.CreateDirectory(d);
+                    }
                 }
             }
         }
@@ -90,6 +98,11 @@ namespace PhotoSqueezer
 
         protected virtual void TransformFile(FileInfo source, string path)
         {
+            if (Options.Verify)
+            {
+                Console.WriteLine($"{source.FullName}=>{path}");
+                return;
+            }
             using (var file = GetFile(source))
             {
                 using (var resized = mediaProcessor.Resize(file, Options.Width, Options.Height, Options.ProportionalResize, Options.Ratio))

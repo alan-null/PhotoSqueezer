@@ -22,10 +22,13 @@ namespace PhotoSqueezer
         [Option('t', "threads", Required = false, HelpText = "Max degree of parallelism", Default = 5)]
         public int Threads { get; set; }
 
-        [Option('p', "proportionalResize", Required = false, HelpText = "Resize proportionaly", Default = false, Group = "Size")]
+        [Option('p', "proportionalResize", Required = false, HelpText = "Resize proportionally", Default = false, Group = "Size")]
         public bool ProportionalResize { get; set; }
 
         [Option('r', "ratio", Required = false, HelpText = "Aspect ratio for resize", Default = 0, Group = "Ratio")]
         public double Ratio { get; set; }
+
+        [Option('v', "verify", Required = false, HelpText = "Verify or dry mode. Logs changes before making them.", Default = false)]
+        public bool Verify { get; set; }
     }
 }

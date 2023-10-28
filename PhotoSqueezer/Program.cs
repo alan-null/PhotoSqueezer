@@ -20,6 +20,7 @@ namespace PhotoSqueezer
                 ParallelOptions = new ParallelOptions { MaxDegreeOfParallelism = o.Threads },
                 ProportionalResize = o.ProportionalResize,
                 Ratio= o.Ratio,
+                Verify = o.Verify
             };
         }
     }
